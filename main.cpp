@@ -3,8 +3,12 @@
 #include "MazeGUI.h"
 #include "Player.h"
 #include <unistd.h>
+#include <ctime>
+#include <cstdlib>
 
 int main() {
+    srand((int) time(0));
+
     Maze maze("maze1.txt");
     Player player(maze.getStart());
     MazeGUI gui(maze, player);

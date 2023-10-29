@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 // Constructor implementation
 Player::Player(const std::pair<int, int> &startPos) 
@@ -38,8 +39,8 @@ std::pair<int, int> Player::nextMove(const std::vector<std::pair<std::pair<int,i
     // if there are no possible moves, pop the positionStack and return the top
     if (possibleMoves.size() == 0) {
         if(positionStack.size() > 0) {
-            positionStack.pop_back();
             currPosition = positionStack.back();
+            positionStack.pop_back();
             return currPosition;
         } else {
             // if there are no positions in the positionStack, return the current position
@@ -49,7 +50,7 @@ std::pair<int, int> Player::nextMove(const std::vector<std::pair<std::pair<int,i
         // if there are possible moves, push the current position to the positionStack
         positionStack.push_back(currPosition);
         // choose a random move from possibleMoves
-        int randIndex = rand() % possibleMoves.size();
+        int randIndex = rand() % 100 % possibleMoves.size();
         currPosition = possibleMoves[randIndex].first;
         // apply effects based on current cell type;
         applyEffects(possibleMoves[randIndex].second);
