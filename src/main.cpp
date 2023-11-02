@@ -29,10 +29,17 @@ std::string getRandomMazePath(const std::string& dirPath) {
 int main() {
     srand((int) time(0));
 
-    // Pick a random maze from the mazes/generated folder
-    std::string mazePath = getRandomMazePath("mazes/generated");
+    bool useRandomMaze = false;
+    std::string mazePath;
+
+    if (useRandomMaze) {
+        mazePath = getRandomMazePath("mazes/generated");
+    } else {
+        mazePath = "mazes/static/maze1.txt";
+    }
+
     Maze maze(mazePath);
-    
+        
     Player player(maze.getStart());
     MazeGUI gui(maze, player);
 
@@ -48,7 +55,7 @@ int main() {
             maze.setCell(player.getCurrPosition(), 8);
         }
         ++steps;
-        // usleep(50000);
+        usleep(50000);
     }
     gui.displayMaze();
     std::cout << "You escaped " << mazePath << " in " << steps << " steps!" << std::endl;
