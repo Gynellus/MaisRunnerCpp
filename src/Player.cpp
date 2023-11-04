@@ -1,62 +1,62 @@
 #include "Player.h"
 #include <iostream>
+#include <algorithm>
+// #include <cstdlib> // for rand()
 
 // Constructor implementation
-Player::Player(const std::pair<int, int> &startPos) 
-    : currPosition(startPos) {
-    pastPositions.push_back(startPos);
-    positionStack.push_back(startPos);
+Player::Player(const Tile &startTile) 
+    : currTile(startTile) {
+    pastTiles.push_back(startTile);
+    tileStack.push_back(startTile);
 }
 
-// getCurrPosition method implementation
-std::pair<int, int> Player::getCurrPosition() const {
-    return currPosition;
+// getCurrTile method implementation
+Tile Player::getCurrTile() const {
+    return currTile;
 }
 
 // nextMove method implementation
-std::pair<int, int> Player::nextMove(const std::vector<std::pair<std::pair<int,int>, int>>& visualField) {
-    std::vector<std::pair<std::pair<int, int>, int>> possibleMoves;
+Tile Player::nextMove(const std::vector<Tile>& visualField) {
+    std::vector<Tile> possibleMoves;
 
-    for (const auto& cell : visualField) {
-        std::pair<int, int> position = cell.first;
-        int cellType = cell.second;
-        
-        // Check if the position is within one step of the current position
-        if(std::abs(position.first - currPosition.first) + std::abs(position.second - currPosition.second) == 1) {
-            // if the cell is the end, return the position
-            if (cellType == 3) {
-                currPosition = position;
-                return currPosition;
+    for (const auto& tile : visualField) {
+        // Check if the tile is within one step of the current position
+        if(std::abs(tile.x - currTile.x) + std::abs(tile.y - currTile.y) == 1) {
+            // if the tile is the end, return the position
+            if (tile.value == 3) {
+                currTile = tile;
+                return currTile;
             }
 
-            // if the cell is empty, and not in pastPositions, add it to possibleMoves
-            if (cellType != 1 && std::find(pastPositions.begin(), pastPositions.end(), position) == pastPositions.end()) {
-                possibleMoves.push_back(std::make_pair(position, cellType));
+            // if the tile is empty, and not in pastTiles, add it to possibleMoves
+            if (tile.value != 1 && std::find_if(pastTiles.begin(), pastTiles.end(), 
+                [tile](const Tile& t) { return t.x == tile.x && t.y == tile.y; }) == pastTiles.end()) {
+                possibleMoves.push_back(tile);
             }
         }
     }
     
-    // if there are no possible moves, pop the positionStack and return the top
-    if (possibleMoves.size() == 0) {
-        if(positionStack.size() > 0) {
-            currPosition = positionStack.back();
-            positionStack.pop_back();
-            return currPosition;
+    // if there are no possible moves, pop the tileStack and return the top
+    if (possibleMoves.empty()) {
+        if(!tileStack.empty()) {
+            currTile = tileStack.back();
+            tileStack.pop_back();
+            return currTile;
         } else {
-            // if there are no positions in the positionStack, return the current position
-            return currPosition;
+            // if there are no tiles in the tileStack, return the current tile
+            return currTile;
         }
     } else {
-        // if there are possible moves, push the current position to the positionStack
-        positionStack.push_back(currPosition);
+        // if there are possible moves, push the current tile to the tileStack
+        tileStack.push_back(currTile);
         // choose a random move from possibleMoves
-        int randIndex = rand() % 100 % possibleMoves.size();
-        currPosition = possibleMoves[randIndex].first;
-        // apply effects based on current cell type;
-        applyEffects(possibleMoves[randIndex].second);
-        // add the current position to pastPositions
-        pastPositions.push_back(currPosition);
-        return currPosition;
+        int randIndex = rand() % possibleMoves.size();
+        currTile = possibleMoves[randIndex];
+        // apply effects based on current tile type;
+        applyEffects(possibleMoves[randIndex].value);
+        // add the current tile to pastTiles
+        pastTiles.push_back(currTile);
+        return currTile;
     }
 }
 

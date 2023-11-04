@@ -45,14 +45,14 @@ int main() {
 
     int steps = 0;
     
-    while (player.getCurrPosition() != maze.getEnd()) {
+    while (player.getCurrTile() != maze.getEnd()) {
         for (int i = 0; i < player.getWalkingSpeed(); i++) {
             gui.displayMaze();
-            player.nextMove(maze.getVisualField(player.getCurrPosition(), player.getSightRange()));
-            if (player.getCurrPosition() == maze.getEnd()) {
+            player.nextMove(maze.getVisualField(player.getCurrTile(), player.getSightRange()));
+            if (player.getCurrTile() == maze.getEnd()) {
                 break;
             }
-            maze.setCell(player.getCurrPosition(), 8);
+            maze.setCell(player.getCurrTile(), 8);
         }
         ++steps;
         usleep(50000);

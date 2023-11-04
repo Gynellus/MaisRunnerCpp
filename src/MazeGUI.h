@@ -4,6 +4,7 @@
 
 #include "Maze.h"
 #include "Player.h"
+#include "Tile.h"
 #include <iostream>
 
 class MazeGUI {

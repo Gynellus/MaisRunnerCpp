@@ -8,8 +8,8 @@ MazeGUI::MazeGUI(const Maze& m, const Player& p) : maze(m), player(p) {}
 // displayMaze method implementation
 void MazeGUI::displayMaze() {
     const auto& data = maze.getData();
-    std::pair<int,int> playerPos = player.getCurrPosition();
-    std::vector<std::pair<std::pair<int,int>,int>> visualField = maze.getVisualField(playerPos, player.getSightRange());
+    Tile playerPos = player.getCurrTile();
+    std::vector<Tile> visualField = maze.getVisualField(playerPos, player.getSightRange());
 
     for (int i = 0; i < data.size(); ++i) {
         const auto& row = data[i];
@@ -19,7 +19,7 @@ void MazeGUI::displayMaze() {
             // Check if the current cell is within the visual field
             bool isInVisualField = false;
             for (const auto& cell : visualField) {
-                if (cell.first.first == i && cell.first.second == j || i == playerPos.first && j == playerPos.second) {
+                if (cell.x == i && cell.y == j) {
                     isInVisualField = true;
                     break;
                 }
@@ -29,8 +29,10 @@ void MazeGUI::displayMaze() {
                 std::cout << "\033[32m";  // Set text color to green
             }
 
-            if (i == playerPos.first && j == playerPos.second) {
+            if (i == playerPos.x && j == playerPos.y) {
+                std::cout << "\033[32m";  // Set text color to green
                 std::cout << "PP";  // Player
+                std::cout << "\033[0m"; // Reset text color to default
             } else {
 
                 switch (cell) {

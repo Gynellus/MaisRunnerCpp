@@ -1,23 +1,26 @@
-// Maze.h
-#pragma once
+#ifndef MAZE_H
+#define MAZE_H
 
 #include <vector>
 #include <string>
+#include <utility>
+#include "Tile.h"
 
 class Maze {
-private:
-    std::vector<std::vector<int>> mazeData;
-
 public:
-    // Constructor declaration
-    Maze(const std::string& filePath);
+    Maze(const std::string& filePath);  // Constructor declaration
+    const std::vector<std::vector<int>>& getData() const;  // Method to get maze data
+    
+    Tile getStart() const;   // Returns the start position as a Tile
+    Tile getEnd() const;     // Returns the end position as a Tile
+    std::vector<Tile> getVisualField(const Tile& pos, int sightRange) const;  // Method to get the visual field as Tiles
 
-    // Method declarations
-    void loadFromFile(const std::string& filePath);
-    const std::vector<std::vector<int>>& getData() const;
-    std::pair<int, int> getStart() const;
-    std::pair<int, int> getEnd() const;
-    std::vector<std::pair<std::pair<int,int>, int>> getVisualField(const std::pair<int, int>& pos, const int sightRange) const;
-    int getCell(const std::pair<int, int>& pos) const;
-    void setCell(const std::pair<int, int>& pos, const int value);
+    int getCell(const Tile& pos) const;     // Method to get the value of a cell
+    void setCell(const Tile& pos, int value);   // Method to set the value of a cell
+
+private:
+    std::vector<std::vector<int>> mazeData;  // 2D vector to store maze data
+    void loadFromFile(const std::string& filePath);  // Helper method to load maze from a file
 };
+
+#endif // MAZE_H

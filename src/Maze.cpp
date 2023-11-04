@@ -84,56 +84,53 @@ const std::vector<std::vector<int>>& Maze::getData() const {
     return mazeData;
 }
 
-// getStart method implementation
-std::pair<int, int> Maze::getStart() const {
+Tile Maze::getStart() const {
     for (int i = 0; i < mazeData.size(); ++i) {
         for (int j = 0; j < mazeData[i].size(); ++j) {
             if (mazeData[i][j] == 2)
-                return std::make_pair(i, j);
+                return Tile(i, j, mazeData[i][j]);
         }
     }
-    return std::make_pair(-1, -1);
+    return Tile(-1, -1, -1); // Indicating an invalid tile if no start is found
 }
 
-// getEnd method implementation
-std::pair<int, int> Maze::getEnd() const {
+Tile Maze::getEnd() const {
     for (int i = 0; i < mazeData.size(); ++i) {
         for (int j = 0; j < mazeData[i].size(); ++j) {
             if (mazeData[i][j] == 3)
-                return std::make_pair(i, j);
+                return Tile(i, j, mazeData[i][j]);
         }
     }
-    return std::make_pair(-1, -1);
+    return Tile(-1, -1, -1); // Indicating an invalid tile if no end is found
 }
 
-std::vector<std::pair<std::pair<int,int>, int>> Maze::getVisualField(const std::pair<int, int>& pos, const int sightRange) const {
-    std::vector<std::pair<std::pair<int,int>, int>> visualField;
+std::vector<Tile> Maze::getVisualField(const Tile& pos, const int sightRange) const {
+    std::vector<Tile> visualField;
 
-    int dx[] = {0, 0, -1, 1};
+    int dx[] = {0, 0, -1, 1};   
     int dy[] = {-1, 1, 0, 0};
 
-    // For each direction (left, right, up, down)
-    for(int dir = 0; dir < 4; dir++) {
-        int x = pos.first;
-        int y = pos.second;
-        for(int dist = 1; dist <= sightRange; dist++) {
+    for (int dir = 0; dir < 4; dir++) {
+        int x = pos.x;
+        int y = pos.y;
+        for (int dist = 1; dist <= sightRange; dist++) {
             x += dx[dir];
             y += dy[dir];
-            // Check for out-of-bounds or walls
-            if(x < 0 || x >= mazeData.size() || y < 0 || y >= mazeData[x].size() || mazeData[x][y] == 1) {
-                visualField.push_back({std::make_pair(x,y), mazeData[x][y]});
+            if (x < 0 || x >= mazeData.size() || y < 0 || y >= mazeData[x].size() || mazeData[x][y] == 1) {
+                visualField.emplace_back(x, y, mazeData[x][y]);
                 break;
             }
-            visualField.push_back({std::make_pair(x,y), mazeData[x][y]});
+            visualField.emplace_back(x, y, mazeData[x][y]);
         }
     }
     return visualField;
 }
 
-int Maze::getCell(const std::pair<int, int>& pos) const {
-    return mazeData[pos.first][pos.second];
+int Maze::getCell(const Tile& pos) const {
+    return mazeData[pos.x][pos.y];
 }
 
-void Maze::setCell(const std::pair<int, int>& pos, const int value) {
-    mazeData[pos.first][pos.second] = value;
+void Maze::setCell(const Tile& pos, const int value) {
+    mazeData[pos.x][pos.y] = value;
 }
+

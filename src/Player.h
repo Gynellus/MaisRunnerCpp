@@ -2,22 +2,20 @@
 #pragma once
 
 #include "Maze.h"
-#include <algorithm>
-
-
+#include "Tile.h"
 
 class Player {
 private:
-    std::pair<int, int> currPosition;
-    std::vector<std::pair<int, int>> pastPositions;
-    std::vector<std::pair<int, int>> positionStack;
-    int sightRange = 1;
-    int walkingSpeed = 1;
+    Tile currTile; // Current position as Tile
+    std::vector<Tile> pastTiles; // Track past tiles visited
+    std::vector<Tile> tileStack; // Stack for backtracking
+    int sightRange = 1; // The player's sight range
+    int walkingSpeed = 1; // The player's walking speed
 
 public:
-    Player(const std::pair<int, int>& startPos);
-    std::pair<int, int> getCurrPosition() const;
-    std::pair<int, int> nextMove(const std::vector<std::pair<std::pair<int,int>, int>>& visualField);
+    Player(const Tile& startTile);
+    Tile getCurrTile() const;
+    Tile nextMove(const std::vector<Tile>& visualField);
     void rangeIncrease();
     void rangeDecrease();
     int getSightRange() const;
