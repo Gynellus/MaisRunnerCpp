@@ -87,7 +87,7 @@ const std::vector<std::vector<int>>& Maze::getData() const {
 Tile Maze::getStart() const {
     for (int i = 0; i < mazeData.size(); ++i) {
         for (int j = 0; j < mazeData[i].size(); ++j) {
-            if (mazeData[i][j] == 2)
+            if (mazeData[i][j] == 2)    // Find 2 in the maze 
                 return Tile(i, j, mazeData[i][j]);
         }
     }
@@ -97,7 +97,7 @@ Tile Maze::getStart() const {
 Tile Maze::getEnd() const {
     for (int i = 0; i < mazeData.size(); ++i) {
         for (int j = 0; j < mazeData[i].size(); ++j) {
-            if (mazeData[i][j] == 3)
+            if (mazeData[i][j] == 3)    // Find 3 in the maze
                 return Tile(i, j, mazeData[i][j]);
         }
     }
@@ -107,20 +107,20 @@ Tile Maze::getEnd() const {
 std::vector<Tile> Maze::getVisualField(const Tile& pos, const int sightRange) const {
     std::vector<Tile> visualField;
 
-    int dx[] = {0, 0, -1, 1};   
-    int dy[] = {-1, 1, 0, 0};
+    int dx[] = {0, 0, -1, 1};   // Horizontal directions
+    int dy[] = {-1, 1, 0, 0};   // Vertical directions
 
     for (int dir = 0; dir < 4; dir++) {
         int x = pos.x;
         int y = pos.y;
-        for (int dist = 1; dist <= sightRange; dist++) {
-            x += dx[dir];
-            y += dy[dir];
-            if (x < 0 || x >= mazeData.size() || y < 0 || y >= mazeData[x].size() || mazeData[x][y] == 1) {
-                visualField.emplace_back(x, y, mazeData[x][y]);
-                break;
+        for (int dist = 1; dist <= sightRange; dist++) {    // Look in each direction as much as the sightRange allows
+            x += dx[dir];   // From current position add the appropriate offset, horizontal
+            y += dy[dir];   // and vertical
+            if (x < 0 || x >= mazeData.size() || y < 0 || y >= mazeData[x].size() || mazeData[x][y] == 1) { 
+                visualField.push_back(Tile(x, y, mazeData[x][y]));
+                break; // If there's a wall or we're somehow looking out of the boundaries of the maze, break
             }
-            visualField.emplace_back(x, y, mazeData[x][y]);
+            visualField.push_back(Tile(x, y, mazeData[x][y])); // Add tile to the visual field
         }
     }
     return visualField;

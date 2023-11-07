@@ -1,5 +1,5 @@
-#ifndef MAZE_H
-#define MAZE_H
+// Maze.h
+#pragma once
 
 #include <vector>
 #include <string>
@@ -7,6 +7,12 @@
 #include "Tile.h"
 
 class Maze {
+
+private:
+    std::vector<std::vector<int>> mazeData;  // 2D vector to store maze data
+    void loadFromFile(const std::string& filePath);  // Helper method to load maze from a file
+
+
 public:
     Maze(const std::string& filePath);  // Constructor declaration
     const std::vector<std::vector<int>>& getData() const;  // Method to get maze data
@@ -17,10 +23,4 @@ public:
 
     int getCell(const Tile& pos) const;     // Method to get the value of a cell
     void setCell(const Tile& pos, int value);   // Method to set the value of a cell
-
-private:
-    std::vector<std::vector<int>> mazeData;  // 2D vector to store maze data
-    void loadFromFile(const std::string& filePath);  // Helper method to load maze from a file
 };
-
-#endif // MAZE_H

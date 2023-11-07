@@ -1,5 +1,4 @@
 // MazeGUI.h
-
 #pragma once
 
 #include "Maze.h"

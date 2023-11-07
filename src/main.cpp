@@ -1,4 +1,3 @@
-// main.cpp
 #include "Maze.h"
 #include "MazeGUI.h"
 #include "Player.h"
@@ -7,57 +6,76 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <filesystem>  
+#include <filesystem>
 
 namespace fs = std::filesystem;
 
+// Function to get a random number within a given range (1 to max).
 int getRandomMazeNumber(int max) {
     return (rand() % max) + 1;
 }
 
+// Function to get a random maze file path from a specified directory.
 std::string getRandomMazePath(const std::string& dirPath) {
     int mazeCount = 0;
+    // Count the number of maze files in the directory.
     for (const auto& entry : fs::directory_iterator(dirPath)) {
         if (entry.is_regular_file() && entry.path().extension() == ".txt") {
             ++mazeCount;
         }
     }
+
+    // Check if there are any maze files in the directory.
+    if (mazeCount == 0) {
+        throw std::runtime_error("No maze files found in the directory.");
+    }
+
+    // Choose a random maze file.
     int randomMazeNumber = getRandomMazeNumber(mazeCount);
     return dirPath + "/maze" + std::to_string(randomMazeNumber) + ".txt";
 }
 
 int main() {
+    // Initialize random seed based on current time.
     srand((int) time(0));
 
+    // Flag to choose between random and static maze.
     bool useRandomMaze = false;
     std::string mazePath;
 
+    // Determine the path of the maze to be used.
     if (useRandomMaze) {
         mazePath = getRandomMazePath("mazes/generated");
     } else {
         mazePath = "mazes/static/maze1.txt";
     }
 
+    // Initialize maze and player objects.
     Maze maze(mazePath);
-        
     Player player(maze.getStart());
     MazeGUI gui(maze, player);
 
     int steps = 0;
-    
+
+    // Main game loop that continues until the player reaches the end of the maze.
     while (player.getCurrTile() != maze.getEnd()) {
-        for (int i = 0; i < player.getWalkingSpeed(); i++) {
+        for (int i = 0; i < player.getWalkingSpeed(); i++) {    // The player moves multiple steps per iteration, if speed > 1.
             gui.displayMaze();
             player.nextMove(maze.getVisualField(player.getCurrTile(), player.getSightRange()));
+            // Break if the player reaches the end.
             if (player.getCurrTile() == maze.getEnd()) {
                 break;
             }
-            maze.setCell(player.getCurrTile(), 8);
+            // Mark the current tile as explored.
+            maze.setCell(player.getCurrTile(), 8); // 8 is the value assigned to previously explored tiles.
         }
         ++steps;
-        usleep(50000);
+        usleep(50000); // adds a delay in visualization (default 50 milliseconds).
     }
+
+    // Display the final state of the maze and the number of steps taken.
     gui.displayMaze();
     std::cout << "You escaped " << mazePath << " in " << steps << " steps!" << std::endl;
+
     return 0;
 }

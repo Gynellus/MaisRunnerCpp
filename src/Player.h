@@ -7,20 +7,21 @@
 class Player {
 private:
     Tile currTile; // Current position as Tile
-    std::vector<Tile> pastTiles; // Track past tiles visited
     std::vector<Tile> tileStack; // Stack for backtracking
     int sightRange = 1; // The player's sight range
     int walkingSpeed = 1; // The player's walking speed
+    
+    void applyEffects(int cellType); // Method to apply effects of a cell
+    Tile getStepTowards(const Tile& target); // Method to get a step towards a target tile
+    void speedIncrease();
+    void speedDecrease();
+    void rangeIncrease();
+    void rangeDecrease();
 
 public:
     Player(const Tile& startTile);
     Tile getCurrTile() const;
     Tile nextMove(const std::vector<Tile>& visualField);
-    void rangeIncrease();
-    void rangeDecrease();
     int getSightRange() const;
-    void speedIncrease();
-    void speedDecrease();
     int getWalkingSpeed() const;
-    void applyEffects(int cellType);
 };
