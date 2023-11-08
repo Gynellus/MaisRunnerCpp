@@ -14,7 +14,8 @@ private:
 
 
 public:
-    Maze(const std::string& filePath);  // Constructor declaration
+    Maze(const std::string& filePath);  // Constructor to load maze from a file
+    Maze(const std::vector<std::vector<int>>& mazeData); // Constructor to load maze from a 2D vector
     const std::vector<std::vector<int>>& getData() const;  // Method to get maze data
     
     Tile getStart() const;   // Returns the start position as a Tile

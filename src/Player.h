@@ -10,6 +10,7 @@ private:
     std::vector<Tile> tileStack; // Stack for backtracking
     int sightRange = 1; // The player's sight range
     int walkingSpeed = 1; // The player's walking speed
+    bool backtrack = false; // To add one step when backtracking
     
     void applyEffects(int cellType); // Method to apply effects of a cell
     Tile getStepTowards(const Tile& target); // Method to get a step towards a target tile

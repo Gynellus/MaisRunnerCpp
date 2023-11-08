@@ -6,9 +6,13 @@
 #include <string>
 
 
-// Constructor implementation
+// Constructor implementations
 Maze::Maze(const std::string& filePath) {
     loadFromFile(filePath);
+}
+
+Maze::Maze(const std::vector<std::vector<int>>& data) {
+    mazeData = data;
 }
 
 void Maze::loadFromFile(const std::string& filePath) {

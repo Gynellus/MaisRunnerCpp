@@ -1,6 +1,7 @@
 #include "Maze.h"
 #include "MazeGUI.h"
 #include "Player.h"
+#include "MazeGenerator.h"
 #include <unistd.h>
 #include <ctime>
 #include <cstdlib>
@@ -35,25 +36,28 @@ std::string getRandomMazePath(const std::string& dirPath) {
     return dirPath + "/maze" + std::to_string(randomMazeNumber) + ".txt";
 }
 
-int main() {
-    // Initialize random seed based on current time.
+int main(int argc, char *argv[]) {
     srand((int) time(0));
 
-    // Flag to choose between random and static maze.
     bool useRandomMaze = false;
-    std::string mazePath;
 
-    // Determine the path of the maze to be used.
-    if (useRandomMaze) {
-        mazePath = getRandomMazePath("mazes/generated");
-    } else {
-        mazePath = "mazes/static/maze1.txt";
+    // Loop through command-line arguments
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "-r") {
+            useRandomMaze = true;
+            break;
+        }
     }
 
-    // Initialize maze and player objects.
-    Maze maze(mazePath);
+    Maze maze("mazes/maze1.txt"); // Initialize with a maze from file.
+    if (useRandomMaze) {
+        maze = MazeGenerator(23,23).generateMaze(); // Generate a random maze.
+    }
+
     Player player(maze.getStart());
     MazeGUI gui(maze, player);
+
 
     int steps = 0;
 
@@ -75,7 +79,7 @@ int main() {
 
     // Display the final state of the maze and the number of steps taken.
     gui.displayMaze();
-    std::cout << "You escaped " << mazePath << " in " << steps << " steps!" << std::endl;
+    std::cout << "You escaped the maze in " << steps << " steps!" << std::endl;
 
     return 0;
 }

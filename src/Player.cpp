@@ -54,6 +54,10 @@ Tile Player::nextMove(const std::vector<Tile>& visualField) {
     }
   
     if (possibleMoves.empty() && lastResortMoves.empty()) { // No new moves, need to backtrack
+        if(backtrack == false) {    // Waste the first backtracking turn (half a turn each step, can't turn 180 degrees)
+            backtrack = true;
+            return currTile;
+        }
         if(!tileStack.empty()) {
             currTile = tileStack.back();
             tileStack.pop_back();
@@ -63,6 +67,7 @@ Tile Player::nextMove(const std::vector<Tile>& visualField) {
             return currTile;
         }
     } else if (!possibleMoves.empty()) {    // if there are possible moves, pick one
+        backtrack = false;
         tileStack.push_back(currTile);
         std::vector<Tile> temp;
 
@@ -84,6 +89,7 @@ Tile Player::nextMove(const std::vector<Tile>& visualField) {
             return currTile;
         }
     } else {    // if there are no possible moves, but there are lastResortMoves, choose a random move from lastResortMoves
+        backtrack = false;
         tileStack.push_back(currTile);
         int randIndex = rand() % lastResortMoves.size();
         currTile = lastResortMoves[randIndex];
@@ -125,9 +131,6 @@ void Player::applyEffects(int cellType) {
 // range methods
 void Player::rangeIncrease() {
     sightRange++;
-    if (sightRange > 3) {
-        sightRange = 3;
-    }
 }
 
 void Player::rangeDecrease() {
@@ -145,7 +148,7 @@ int Player::getSightRange() const {
 // speed methods
 void Player::speedIncrease() {
     walkingSpeed++;
-    if (walkingSpeed > 3) {
+    if (walkingSpeed > 3) { // Limit speed to 3
         walkingSpeed = 3;
     }
 }

@@ -5,11 +5,11 @@ OBJ = $(OUTPUT_DIR)/main
 
 all: $(OBJ)
 
-$(OBJ): $(SRC_DIR)/main.cpp $(SRC_DIR)/Maze.cpp $(SRC_DIR)/MazeGUI.cpp $(SRC_DIR)/Player.cpp
+$(OBJ): $(SRC_DIR)/main.cpp $(SRC_DIR)/Maze.cpp $(SRC_DIR)/MazeGUI.cpp $(SRC_DIR)/Player.cpp $(SRC_DIR)/MazeGenerator.cpp
 	g++ $^ -o $@
 
 run: $(OBJ)
-	./$(OBJ)
+	./$(OBJ) $(ARGS)
 
 clean:
 	rm -f $(OUTPUT_DIR)/*
